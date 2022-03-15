@@ -1,5 +1,6 @@
 package appinventor.ai_rdrniel12345.renju_clock;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -17,12 +18,9 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SettingActivity extends AppCompatActivity {
-    private View decorView; // for fullscreen
-    private int uiOption; // for fullscreen
 
     Spinner mode;
     String[] modes = {"기본","초읽기","피셔"};
@@ -48,6 +46,7 @@ public class SettingActivity extends AppCompatActivity {
     SharedPreferences sf;
     SharedPreferences.Editor editor;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,30 +83,25 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void fullscreen(){
-        decorView = getWindow().getDecorView();
-        uiOption = getWindow().getDecorView().getSystemUiVisibility();
-        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH )
-            uiOption |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        // for fullscreen
+        View decorView = getWindow().getDecorView();
+        // for fullscreen
+        int uiOption = getWindow().getDecorView().getSystemUiVisibility();
         if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN )
             uiOption |= View.SYSTEM_UI_FLAG_FULLSCREEN;
         if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT )
             uiOption |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
-        decorView.setSystemUiVisibility( uiOption );
+        decorView.setSystemUiVisibility(uiOption);
     }
 
     private void cancel() {
         Button cancel = findViewById(R.id.cancelButton);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        cancel.setOnClickListener(v -> finish());
     }
 
     private void setMode() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, modes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mode.setAdapter(adapter);
         mode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -157,13 +151,9 @@ public class SettingActivity extends AppCompatActivity {
     private void apply() {
         Button apply = findViewById(R.id.applyButton);
 
-        apply.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                saveData();
-                sendData();
-            }
+        apply.setOnClickListener(v -> {
+            saveData();
+            sendData();
         });
     }
 
@@ -175,8 +165,7 @@ public class SettingActivity extends AppCompatActivity {
         intent.putExtra("min2",min2.getValue());
         intent.putExtra("sec1",sec1.getValue());
         intent.putExtra("sec2",sec2.getValue());
-        if(mode_int == 0);
-        else if(mode_int == 1) {
+        if(mode_int == 1) {
             intent.putExtra("ctdw_time",ctdw_time.getValue());
             intent.putExtra("ctdw_sec",ctdw_sec.getValue());
         }
